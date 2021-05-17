@@ -3,6 +3,7 @@
     <div class="rulet_view">
       <div class="rulet_view_result">{{ result }}</div>
       <img src="@/assets/arow.svg" alt="arrow" class="rulet_view_arrow" />
+      <img src="@/assets/table.svg" alt="Table" class="rulet_view_table" />
       <img
         ref="rulet"
         src="@/assets/rulet.svg"
@@ -10,11 +11,20 @@
         class="rulet_view_nums"
       />
     </div>
-    <button :disabled="disable" id="btn" @click="run">Run</button>
+    <input
+      type="button"
+      :disabled="disable"
+      id="btn"
+      @click="run()"
+      placeholder="Run"
+      value="Run"
+    />
   </div>
 </template>
 
 <script>
+import anime from "animejs";
+
 export default {
   name: "rulet",
   data: () => {
@@ -25,45 +35,36 @@ export default {
         7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11,
       ],
       disable: false,
-      anime: null,
+      anim: null,
     };
   },
   methods: {
     run() {
       this.disable = true;
       this.result = Math.floor(Math.random() * 37);
-      // this.$anime();
+      let rotate = (360 / 37) * this.ruletNumbers.indexOf(this.result) + 720;
+      const targets = this.$refs.rulet;
+
+      anime({
+        targets,
+        rotate: 0,
+        easing: "easeOutExpo",
+        duration: 0,
+      });
+
+      anime({
+        targets,
+        rotate,
+        easing: "easeOutExpo",
+        duration: 8000,
+        complete: () => {
+          this.disable = false;
+        },
+      });
     },
   },
   mounted() {
-    const targets = this.$refs.rulet;
-
-    const btn = document.getElementById("btn");
-    btn.onclick = () => {
-      this.$anime
-        .timeline()
-        .add({
-          targets,
-          rotate: 0,
-          direction: "normal",
-          easing: "easeOutExpo",
-          duration: 0,
-        })
-        .add({
-          targets,
-          rotate: (360 / 37) * this.coef + 720,
-          easing: "easeOutExpo",
-          duration: 8000,
-          complete: () => {
-            this.disable = false;
-          },
-        });
-    };
-  },
-  computed: {
-    coef() {
-      return this.ruletNumbers.indexOf(this.result);
-    },
+    this.run();
   },
 };
 </script>
@@ -79,8 +80,8 @@ export default {
       justify-content: center;
       align-items: center;
       &_result {
-        width: 50%;
-        height: 50%;
+        width: 60%;
+        height: 60%;
         border-radius: 50%;
         background-color: gray;
         color: white;
@@ -94,12 +95,17 @@ export default {
         position: absolute;
         width: 15%;
         left: 43%;
-        top: 22%;
+        top: 18%;
       }
       &_nums {
         position: absolute;
-        width: 312px;
-        height: 312px;
+        width: 80%;
+        height: 80%;
+      }
+      &_table {
+        position: absolute;
+        width: 100%;
+        height: 100%;
       }
     }
   }

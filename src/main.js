@@ -3,9 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import VueAnime from "vue-animejs";
-
-Vue.use(VueAnime);
+// import VueAnime from "vue-animejs";
+//
+// Vue.use(VueAnime);
 
 Vue.config.productionTip = false;
 
